@@ -40,6 +40,7 @@ need_cmd codesign
 need_cmd find
 need_cmd awk
 need_cmd sed
+need_cmd sudo
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "This installer only supports macOS." >&2
@@ -50,6 +51,14 @@ if [[ "$(uname -m)" != "x86_64" ]]; then
   echo "This installer is for Intel Macs (x86_64)." >&2
   exit 1
 fi
+
+run_privileged() {
+  if [[ -w "/Applications" ]]; then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
 
 download_with_curl() {
   local url="$1"
@@ -199,11 +208,11 @@ codesign --force --deep --sign - "$APP_BUILD" >/dev/null 2>&1 || true
 if [[ -d "$APP_DEST" ]]; then
   backup="${APP_DEST}.backup-$(date +%Y%m%d-%H%M%S)"
   echo "Backing up existing app to: $backup"
-  mv "$APP_DEST" "$backup"
+  run_privileged mv "$APP_DEST" "$backup"
 fi
 
 echo "Installing app to: $APP_DEST"
-ditto "$APP_BUILD" "$APP_DEST"
+run_privileged ditto "$APP_BUILD" "$APP_DEST"
 
 echo "Opening Codex.app..."
 open -a "$APP_DEST" || true

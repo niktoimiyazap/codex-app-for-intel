@@ -18,6 +18,8 @@ It is not an official OpenAI release channel.
 curl -fsSL https://raw.githubusercontent.com/niktoimiyazap/codex-app-for-intel/main/install.sh | bash
 ```
 
+The script may ask for your admin password when writing to `/Applications`.
+
 ## Update
 
 Run the same install command again.
