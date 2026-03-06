@@ -2,9 +2,8 @@
 
 Easy way to run Codex Desktop on older Intel Macs.
 
-This repository provides a prebuilt Intel-friendly `Codex.app` through GitHub Releases and a one-command installer.
-
-Users do not need to build anything locally.
+This project installs and patches `Codex.app` directly on your Intel Mac in one command.
+No local repo build and no manual release asset download are required.
 
 ## OpenAI Notice
 
@@ -21,25 +20,38 @@ curl -fsSL https://raw.githubusercontent.com/niktoimiyazap/codex-app-for-intel/m
 
 ## Update
 
-Run the same install command again. It always pulls the latest release.
-
-## Release Automation
-
-- New Intel build is created automatically when you push a tag like `v1.0.0`.
-- You can also run it manually in GitHub Actions: `Build Intel Release` (`workflow_dispatch`).
-- Workflow uploads the built zip to Actions artifacts and to GitHub Releases.
-
-## Manual Install
-
-1. Open Releases: https://github.com/niktoimiyazap/codex-app-for-intel/releases
-2. Download the latest `Codex-App-for-Intel-*.zip`
-3. Unzip and move `Codex.app` to `/Applications`
+Run the same install command again.
 
 ## What the Installer Does
 
-1. Downloads the latest release zip.
-2. Creates a backup of current `/Applications/Codex.app` (if present).
-3. Installs the new app to `/Applications/Codex.app`.
+1. Downloads official `Codex.dmg`.
+2. Extracts `Codex.app`.
+3. Installs latest `@openai/codex` and injects x64 CLI into app bundle.
+4. Creates backup of current `/Applications/Codex.app` (if present).
+5. Installs patched app to `/Applications/Codex.app`.
+
+## Network Reliability Tweaks
+
+If your network is unstable or restricted, run with overrides:
+
+```bash
+RETRY_COUNT=12 CONNECT_TIMEOUT=30 SPEED_LIMIT=512 \
+curl -fsSL https://raw.githubusercontent.com/niktoimiyazap/codex-app-for-intel/main/install.sh | bash
+```
+
+Proxy example:
+
+```bash
+HTTPS_PROXY=http://127.0.0.1:7890 \
+curl -fsSL https://raw.githubusercontent.com/niktoimiyazap/codex-app-for-intel/main/install.sh | bash
+```
+
+Custom DMG source list (comma-separated):
+
+```bash
+DMG_URLS="https://persistent.oaistatic.com/codex-app-prod/Codex.dmg,https://your-mirror.example/Codex.dmg" \
+curl -fsSL https://raw.githubusercontent.com/niktoimiyazap/codex-app-for-intel/main/install.sh | bash
+```
 
 ## Rollback
 
