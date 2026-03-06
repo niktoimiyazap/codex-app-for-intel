@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  shell-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bash syntax check
+        run: |
+          set -euo pipefail
+          bash -n bin/codex-intel-update
+          bash -n bin/codex-intel-status
+          bash -n install.sh
+          bash -n uninstall.sh
+      - name: ShellCheck
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          shellcheck bin/codex-intel-update
+          shellcheck bin/codex-intel-status
+          shellcheck install.sh
+          shellcheck uninstall.sh
