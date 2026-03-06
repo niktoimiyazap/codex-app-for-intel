@@ -1,103 +1,70 @@
 # Codex App for Intel
 
-Keep Codex GUI usable on older Intel Macs. For free.
+A simple way to use Codex Desktop on older Intel Macs.
 
-This project updates the embedded x64 `codex` binary inside `/Applications/Codex.app` with safety-first backups, automatic rollback, and scheduled checks via `launchd`.
+This project distributes a prebuilt Intel-friendly `Codex.app` package via GitHub Releases and provides a one-command installer.
 
 ## Support This Project
 
-If this helps your daily workflow, you can support development:
-
-<p align="center">
-  <a href="https://www.donationalerts.com/r/niktoimiya">
-    <img alt="Donate via DonationAlerts" src="https://img.shields.io/badge/Donate-DonationAlerts-ff6b6b?style=for-the-badge&logo=buymeacoffee&logoColor=white">
-  </a>
-  <img alt="USDT TRC20" src="https://img.shields.io/badge/USDT-TRC20-26A17B?style=for-the-badge&logo=tether&logoColor=white">
-</p>
+If this project helps you, you can support development:
 
 - DonationAlerts: https://www.donationalerts.com/r/niktoimiya
-- Crypto (USDT TRC20):
-  - Address: `0xda2EB9c240816d5e555eA17Aa94E26C83a13C210`
-  - Please double-check network and address details before sending.
+- USDT (TRC20): `0xda2EB9c240816d5e555eA17Aa94E26C83a13C210`
 - GitHub Sponsors: https://github.com/sponsors/niktoimiyazap
 
-## Why This Exists
+## Super Quick Install (Recommended)
 
-Codex Desktop update channels can move quickly and may not always cover every Intel setup cleanly.
-This project provides a practical, transparent workaround for Intel Macs by updating the embedded CLI used by the app.
+```bash
+curl -fsSL https://raw.githubusercontent.com/niktoimiyazap/codex-app-for-intel/main/install.sh | bash
+```
 
-## Features
+What it does:
 
-- Intel-focused (`x86_64`) updater workflow.
-- Safe binary replacement with timestamped backups.
-- Automatic rollback on failure.
-- Ad-hoc re-signing after patching.
-- Background auto-check every 6 hours via `launchd`.
-- Manual status command and logs for troubleshooting.
+1. Downloads the latest prebuilt release zip from this repository.
+2. Backs up your current `/Applications/Codex.app` (if present).
+3. Installs the downloaded app to `/Applications/Codex.app`.
 
-## Requirements
+## Manual Install
 
-- macOS on Intel (`x86_64`)
-- `Codex.app` installed at `/Applications/Codex.app`
-- `npm` available
-- Global `@openai/codex` CLI install
+1. Open Releases: `https://github.com/niktoimiyazap/codex-app-for-intel/releases`
+2. Download the latest `Codex-App-for-Intel-*.zip`
+3. Unzip and move `Codex.app` to `/Applications`
 
-## Quick Start
+## Maintainer Flow (Build New App Package)
+
+Use this when you want to publish a new prebuilt package.
 
 ```bash
 git clone https://github.com/niktoimiyazap/codex-app-for-intel.git
 cd codex-app-for-intel
-./install.sh
+./scripts/build-intel-app.sh
 ```
 
-## Commands
+Output:
 
-```bash
-codex-intel-status
-codex-intel-update
-```
+- `dist/Codex-App-for-Intel-<app_version>-cli-<cli_version>.zip`
 
-## Uninstall
+Then upload this zip to a new GitHub Release.
 
-```bash
-./uninstall.sh
-# remove logs and backups as well
-./uninstall.sh --purge
-```
+## Requirements (for building)
 
-## File Layout
+- Intel macOS (`x86_64`)
+- `npm`
+- `hdiutil`, `ditto`, `codesign`
+- Global `@openai/codex` (or build script will try to update/install)
 
-- `bin/codex-intel-update` updater logic
-- `bin/codex-intel-status` diagnostics
-- `launchd/com.codex-intel-updater.plist.template` launch agent template
-- `install.sh` one-command installer
-- `uninstall.sh` cleanup script
+## Files
 
-## Logs and Backups
+- `install.sh` one-command installer from GitHub Releases
+- `scripts/build-intel-app.sh` build a patched Intel app zip
+- `scripts/install-local-zip.sh` install from a local zip file
 
-- Logs: `~/.codex-intel-updater/logs/update.log`
-- Launchd logs: `~/.codex-intel-updater/logs/launchd.out.log`, `launchd.err.log`
-- Backups: `~/.codex-intel-updater/backups/`
+## Security Notes
 
-## Safety Notes
-
-- The updater always creates backups before replacing binaries.
-- If validation fails, it restores previous binaries automatically.
-- It modifies your local app bundle and re-signs it ad-hoc.
-- Use at your own risk, and keep regular backups of your system.
-
-## Contributing
-
-Contributions are welcome. Please read `CONTRIBUTING.md`.
-
-## Security
-
-If you discover a vulnerability, please follow `SECURITY.md`.
+- Always verify the release source and checksums before installing.
+- The app bundle is ad-hoc re-signed during build.
+- This project is community-maintained and not affiliated with OpenAI.
 
 ## License
 
-MIT — see `LICENSE`.
-
-## Disclaimer
-
-This is an independent community project and is not affiliated with OpenAI.
+MIT

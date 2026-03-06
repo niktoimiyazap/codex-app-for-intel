@@ -1,21 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BIN_DIR="${BIN_DIR:-$HOME/.local/bin}"
-STATE_DIR="${STATE_DIR:-$HOME/.codex-intel-updater}"
-LABEL="${LAUNCHD_LABEL:-com.codex-intel-updater}"
-PLIST_PATH="$HOME/Library/LaunchAgents/$LABEL.plist"
+APP_DEST="${APP_DEST:-/Applications/Codex.app}"
 
-launchctl unload "$PLIST_PATH" >/dev/null 2>&1 || true
-rm -f "$PLIST_PATH"
-rm -f "$BIN_DIR/codex-intel-update" "$BIN_DIR/codex-intel-status"
-
-if [[ "${1:-}" == "--purge" ]]; then
-  rm -rf "$STATE_DIR"
+if [[ ! -d "$APP_DEST" ]]; then
+  echo "Codex.app is not installed at $APP_DEST"
+  exit 0
 fi
 
-echo "Uninstalled $LABEL."
-if [[ "${1:-}" != "--purge" ]]; then
-  echo "State directory preserved: $STATE_DIR"
-  echo "Run with --purge to remove logs/backups."
-fi
+backup="${APP_DEST}.backup-$(date +%Y%m%d-%H%M%S)"
+
+echo "Moving current app to backup: $backup"
+mv "$APP_DEST" "$backup"
+
+echo "Done."
+echo "If needed, restore with: mv '$backup' '$APP_DEST'"

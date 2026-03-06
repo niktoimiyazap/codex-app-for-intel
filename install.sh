@@ -1,37 +1,83 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BIN_DIR="${BIN_DIR:-$HOME/.local/bin}"
-STATE_DIR="${STATE_DIR:-$HOME/.codex-intel-updater}"
-LABEL="${LAUNCHD_LABEL:-com.codex-intel-updater}"
-PLIST_PATH="$HOME/Library/LaunchAgents/$LABEL.plist"
+REPO="${REPO:-niktoimiyazap/codex-app-for-intel}"
+API_URL="https://api.github.com/repos/${REPO}/releases/latest"
+ASSET_PATTERN="${ASSET_PATTERN:-Codex-App-for-Intel-.*\\.zip$}"
+APP_DEST="${APP_DEST:-/Applications/Codex.app}"
+TMP_DIR="$(mktemp -d /tmp/codex-intel-install.XXXXXX)"
 
-mkdir -p "$BIN_DIR" "$STATE_DIR/logs" "$STATE_DIR/backups" "$HOME/Library/LaunchAgents"
+cleanup() {
+  rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
 
-install -m 755 "$SCRIPT_DIR/bin/codex-intel-update" "$BIN_DIR/codex-intel-update"
-install -m 755 "$SCRIPT_DIR/bin/codex-intel-status" "$BIN_DIR/codex-intel-status"
+need_cmd() {
+  command -v "$1" >/dev/null 2>&1 || {
+    echo "Missing required command: $1" >&2
+    exit 1
+  }
+}
 
-PROGRAM_PATH="$BIN_DIR/codex-intel-update"
+need_cmd curl
+need_cmd python3
+need_cmd unzip
+need_cmd ditto
+need_cmd osascript
 
-sed \
-  -e "s|__LABEL__|$LABEL|g" \
-  -e "s|__PROGRAM__|$PROGRAM_PATH|g" \
-  -e "s|__STATE_DIR__|$STATE_DIR|g" \
-  "$SCRIPT_DIR/launchd/com.codex-intel-updater.plist.template" > "$PLIST_PATH"
+echo "Fetching latest release metadata from ${REPO}..."
+json_file="$TMP_DIR/release.json"
+curl -fsSL "$API_URL" -o "$json_file"
 
-launchctl unload "$PLIST_PATH" >/dev/null 2>&1 || true
-launchctl load "$PLIST_PATH"
+asset_url="$TMP_DIR/asset_url.txt"
+python3 - "$json_file" "$ASSET_PATTERN" > "$asset_url" <<'PY'
+import json, re, sys
+p = sys.argv[1]
+pattern = re.compile(sys.argv[2])
+with open(p, "r", encoding="utf-8") as f:
+    data = json.load(f)
+assets = data.get("assets", [])
+for a in assets:
+    name = a.get("name", "")
+    if pattern.search(name):
+        print(a.get("browser_download_url", ""))
+        sys.exit(0)
+print("")
+sys.exit(1)
+PY
 
-"$BIN_DIR/codex-intel-update" --quiet || true
+url="$(cat "$asset_url")"
+if [[ -z "$url" ]]; then
+  echo "No release asset matching ${ASSET_PATTERN} was found." >&2
+  echo "Open: https://github.com/${REPO}/releases" >&2
+  exit 1
+fi
 
-cat <<MSG
-Installed successfully.
+zip_path="$TMP_DIR/app.zip"
+unpack_dir="$TMP_DIR/unpack"
+mkdir -p "$unpack_dir"
 
-Commands:
-  codex-intel-status
-  codex-intel-update
+echo "Downloading: $url"
+curl -fL "$url" -o "$zip_path"
 
-LaunchAgent:
-  $PLIST_PATH
-MSG
+echo "Unpacking app..."
+unzip -q "$zip_path" -d "$unpack_dir"
+app_src="$(find "$unpack_dir" -maxdepth 3 -type d -name 'Codex.app' | head -n1 || true)"
+if [[ -z "$app_src" ]]; then
+  echo "Codex.app was not found in release zip." >&2
+  exit 1
+fi
+
+if [[ -d "$APP_DEST" ]]; then
+  backup="${APP_DEST}.backup-$(date +%Y%m%d-%H%M%S)"
+  echo "Backing up existing app to: $backup"
+  mv "$APP_DEST" "$backup"
+fi
+
+echo "Installing app to: $APP_DEST"
+ditto "$app_src" "$APP_DEST"
+
+echo "Opening Codex.app..."
+open -a "$APP_DEST" || true
+
+echo "Done. Installed from latest release of ${REPO}."

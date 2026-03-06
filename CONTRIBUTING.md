@@ -8,20 +8,20 @@ Thanks for helping improve Codex App for Intel.
 2. Create a feature branch from `main`.
 3. Make changes with clear commit messages.
 4. Run basic checks:
-   - `bash -n bin/codex-intel-update bin/codex-intel-status install.sh uninstall.sh`
+   - `bash -n install.sh scripts/build-intel-app.sh scripts/install-local-zip.sh`
 5. Open a pull request with a concise description and test notes.
 
 ## Scope
 
 This project aims to stay:
 
-- Small and maintainable.
-- Intel-focused.
-- Safe by default (backup + rollback).
+- Simple for end users (one-command install).
+- Practical for maintainers (easy release packaging).
 - Transparent (plain shell scripts).
+- Focused on Intel compatibility.
 
 ## Style
 
-- Keep scripts POSIX-like Bash where practical.
-- Prefer readability over clever shortcuts.
+- Keep scripts readable and explicit.
+- Prefer reliability over clever one-liners.
 - Add comments only where logic is non-obvious.
