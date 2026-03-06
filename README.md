@@ -65,9 +65,26 @@ mv /Applications/Codex.app.backup-YYYYMMDD-HHMMSS /Applications/Codex.app
 
 ## Support This Project
 
+[![Donate](https://img.shields.io/badge/Donate-DonationAlerts-ff4d6d?style=for-the-badge)](https://www.donationalerts.com/r/niktoimiya)
+[![USDT](https://img.shields.io/badge/USDT-TRC20-26A17B?style=for-the-badge)](#support-this-project)
+[![Sponsor](https://img.shields.io/badge/GitHub-Sponsors-30363D?style=for-the-badge)](https://github.com/sponsors/niktoimiyazap)
+
 - DonationAlerts: https://www.donationalerts.com/r/niktoimiya
 - USDT (TRC20): `0xda2EB9c240816d5e555eA17Aa94E26C83a13C210`
 - GitHub Sponsors: https://github.com/sponsors/niktoimiyazap
+
+## Release Asset For Users
+
+If you want a ready app package in GitHub Releases:
+
+GitHub cannot upload `.app` folders directly, so publish `Codex.app.zip`.
+
+1. Run:
+```bash
+./scripts/build-intel-app.sh
+```
+2. Upload `dist/Codex.app.zip` to a new Release.
+3. Users download `Codex.app.zip`, unzip it, and move `Codex.app` to `/Applications`.
 
 ## Disclaimer
 

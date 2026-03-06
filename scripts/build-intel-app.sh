@@ -90,10 +90,15 @@ codesign --force --deep --sign - "$APP_BUILD" >/dev/null 2>&1
 
 zip_name="Codex-App-for-Intel-${app_ver}-cli-${new_cli}.zip"
 zip_path="$DIST_DIR/$zip_name"
+release_zip="$DIST_DIR/Codex.app.zip"
 rm -f "$zip_path"
+rm -f "$release_zip"
 
 echo "Packaging zip: $zip_path"
 ditto -c -k --sequesterRsrc --keepParent "$APP_BUILD" "$zip_path"
+cp -f "$zip_path" "$release_zip"
 
 shasum -a 256 "$zip_path" | awk '{print "SHA256 " $1}'
+shasum -a 256 "$release_zip" | awk '{print "SHA256 " $1 "  Codex.app.zip"}'
 echo "Build complete: $zip_path"
+echo "Release asset ready: $release_zip"
