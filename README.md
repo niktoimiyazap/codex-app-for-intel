@@ -4,13 +4,28 @@ Keep Codex GUI usable on older Intel Macs. For free.
 
 This project updates the embedded x64 `codex` binary inside `/Applications/Codex.app` with safety-first backups, automatic rollback, and scheduled checks via `launchd`.
 
+<p align="center">
+  <a href="https://www.donationalerts.com/r/niktoimiya">
+    <img src="assets/support-banner.svg" alt="Support Codex App for Intel" width="900">
+  </a>
+</p>
+
 ## Support This Project
 
 If this helps your daily workflow, you can support development:
 
+<p align="center">
+  <a href="https://www.donationalerts.com/r/niktoimiya">
+    <img alt="Donate via DonationAlerts" src="https://img.shields.io/badge/Donate-DonationAlerts-ff6b6b?style=for-the-badge&logo=buymeacoffee&logoColor=white">
+  </a>
+  <img alt="USDT TRC20" src="https://img.shields.io/badge/USDT-TRC20-26A17B?style=for-the-badge&logo=tether&logoColor=white">
+</p>
+
+- DonationAlerts: https://www.donationalerts.com/r/niktoimiya
+- Crypto (USDT TRC20):
+  - Address: `0xda2EB9c240816d5e555eA17Aa94E26C83a13C210`
+  - Please double-check network and address details before sending.
 - GitHub Sponsors: https://github.com/sponsors/niktoimiyazap
-- Donation page: add your preferred link here
-- Crypto (optional): add your wallet here
 
 ## Why This Exists
 

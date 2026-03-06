@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="360" viewBox="0 0 1400 360" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1400" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D1117"/>
+      <stop offset="1" stop-color="#1F2937"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="150" y1="74" x2="1250" y2="290" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF6B6B"/>
+      <stop offset="1" stop-color="#26A17B"/>
+    </linearGradient>
+    <filter id="blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="360" rx="28" fill="url(#bg)"/>
+  <rect x="26" y="26" width="1348" height="308" rx="22" stroke="url(#accent)" stroke-opacity="0.65" stroke-width="2"/>
+
+  <circle cx="182" cy="88" r="24" fill="#FF6B6B" fill-opacity="0.35" filter="url(#blur)"/>
+  <circle cx="1230" cy="276" r="28" fill="#26A17B" fill-opacity="0.35" filter="url(#blur)"/>
+
+  <text x="86" y="126" fill="white" font-family="SF Pro Display, Segoe UI, Arial, sans-serif" font-size="44" font-weight="700">
+    Keep Codex GUI Alive on Intel Macs
+  </text>
+  <text x="86" y="176" fill="#C9D1D9" font-family="SF Pro Text, Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">
+    Free community project • Safe updater • Backup + rollback
+  </text>
+
+  <rect x="86" y="214" width="470" height="74" rx="14" fill="#FF6B6B"/>
+  <text x="122" y="260" fill="white" font-family="SF Pro Display, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">
+    Support via DonationAlerts
+  </text>
+
+  <rect x="586" y="214" width="728" height="74" rx="14" fill="#0F172A" stroke="#26A17B" stroke-width="2"/>
+  <text x="618" y="260" fill="#26A17B" font-family="SF Mono, Menlo, Consolas, monospace" font-size="24" font-weight="600">
+    USDT TRC20: 0xda2EB9c240816d5e555eA17Aa94E26C83a13C210
+  </text>
+</svg>
