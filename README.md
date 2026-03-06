@@ -4,6 +4,13 @@ Easy way to run Codex Desktop on older Intel Macs.
 
 This repository provides a prebuilt Intel-friendly `Codex.app` through GitHub Releases and a one-command installer.
 
+## OpenAI Notice
+
+`Codex App` is an official OpenAI product.
+
+This repository is a community-maintained Intel compatibility distribution workflow.  
+It is not an official OpenAI release channel.
+
 ## Install (One Command)
 
 ```bash
@@ -42,7 +49,8 @@ mv /Applications/Codex.app.backup-YYYYMMDD-HHMMSS /Applications/Codex.app
 
 ## Disclaimer
 
-Community project, not affiliated with OpenAI.
+`OpenAI` and `Codex` are trademarks of OpenAI.
+This repository is maintained by independent contributors and is not affiliated with, endorsed by, or supported by OpenAI.
 
 ## License
 
