@@ -4,12 +4,6 @@ Keep Codex GUI usable on older Intel Macs. For free.
 
 This project updates the embedded x64 `codex` binary inside `/Applications/Codex.app` with safety-first backups, automatic rollback, and scheduled checks via `launchd`.
 
-<p align="center">
-  <a href="https://www.donationalerts.com/r/niktoimiya">
-    <img src="assets/support-banner.svg" alt="Support Codex App for Intel" width="900">
-  </a>
-</p>
-
 ## Support This Project
 
 If this helps your daily workflow, you can support development:
