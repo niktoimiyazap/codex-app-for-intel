@@ -4,6 +4,8 @@ Easy way to run Codex Desktop on older Intel Macs.
 
 This repository provides a prebuilt Intel-friendly `Codex.app` through GitHub Releases and a one-command installer.
 
+Users do not need to build anything locally.
+
 ## OpenAI Notice
 
 `Codex App` is an official OpenAI product.
@@ -20,6 +22,12 @@ curl -fsSL https://raw.githubusercontent.com/niktoimiyazap/codex-app-for-intel/m
 ## Update
 
 Run the same install command again. It always pulls the latest release.
+
+## Release Automation
+
+- New Intel build is created automatically when you push a tag like `v1.0.0`.
+- You can also run it manually in GitHub Actions: `Build Intel Release` (`workflow_dispatch`).
+- Workflow uploads the built zip to Actions artifacts and to GitHub Releases.
 
 ## Manual Install
 

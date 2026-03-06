@@ -1,0 +1,87 @@
+name: Build Intel Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: "Publish GitHub Release"
+        required: true
+        default: true
+        type: boolean
+      tag_name:
+        description: "Release tag for manual run (e.g. v2026.03.06)"
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  build-and-release:
+    runs-on: macos-13
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build Intel app zip
+        run: ./scripts/build-intel-app.sh
+
+      - name: Detect built zip
+        id: zip
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP_PATH="$(ls -1 dist/Codex-App-for-Intel-*.zip | head -n1)"
+          ZIP_NAME="$(basename "$ZIP_PATH")"
+          echo "zip_path=$ZIP_PATH" >> "$GITHUB_OUTPUT"
+          echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.zip.outputs.zip_name }}
+          path: ${{ steps.zip.outputs.zip_path }}
+          if-no-files-found: error
+
+      - name: Resolve tag
+        id: tag
+        if: github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.publish_release == true)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            TAG_NAME="${GITHUB_REF_NAME}"
+          elif [[ -n "${{ inputs.tag_name }}" ]]; then
+            TAG_NAME="${{ inputs.tag_name }}"
+          else
+            TAG_NAME="v$(date -u +%Y.%m.%d)-build${GITHUB_RUN_NUMBER}"
+          fi
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Publish release asset
+        if: github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.publish_release == true)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ steps.tag.outputs.tag_name }}
+          ZIP_PATH: ${{ steps.zip.outputs.zip_path }}
+          ZIP_NAME: ${{ steps.zip.outputs.zip_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" "$ZIP_PATH" --clobber
+          else
+            gh release create "$TAG_NAME" "$ZIP_PATH" \
+              --target "${GITHUB_SHA}" \
+              --title "Codex App for Intel $TAG_NAME" \
+              --notes "Automated Intel build. Asset: $ZIP_NAME"
+          fi
