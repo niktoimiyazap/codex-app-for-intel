@@ -73,19 +73,6 @@ mv /Applications/Codex.app.backup-YYYYMMDD-HHMMSS /Applications/Codex.app
 - USDT (TRC20): `0xda2EB9c240816d5e555eA17Aa94E26C83a13C210`
 - GitHub Sponsors: https://github.com/sponsors/niktoimiyazap
 
-## Release Asset For Users
-
-If you want a ready app package in GitHub Releases:
-
-GitHub cannot upload `.app` folders directly, so publish `Codex.app.zip`.
-
-1. Run:
-```bash
-./scripts/build-intel-app.sh
-```
-2. Upload `dist/Codex.app.zip` to a new Release.
-3. Users download `Codex.app.zip`, unzip it, and move `Codex.app` to `/Applications`.
-
 ## Disclaimer
 
 `OpenAI` and `Codex` are trademarks of OpenAI.
